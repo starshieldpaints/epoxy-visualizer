@@ -1,67 +1,3 @@
-/* .app-layout {
-  display: flex;
-  flex-direction: row;
-  min-height: 100vh;
-}
-.controls-panel {
-  flex: 1;
-  max-width: 350px;
-  padding: 2rem;
-  background: #fafafb;
-  border-right: 1px solid #ddd;
-}
-.scene-panel {
-  flex: 3;
-  background: #202025;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@media (max-width: 768px) {
-  .app-layout {
-    flex-direction: column;
-  }
-  .controls-panel {
-    max-width: none;
-    border-right: none;
-    border-bottom: 1px solid #ddd;
-  }
-}
-.floor-form label {
-  display: block;
-  margin-bottom: 1.2em;
-}
-.floor-form input,
-.floor-form select {
-  margin-left: 0.3em;
-}
-.submit-btn, .capture-btn {
-  margin-top: 1.4em;
-  padding: 0.7em 1.3em;
-  background: #4971f5;
-  color: white;
-  border: none;
-  border-radius: 0.3em;
-  font-size: 1em;
-  cursor: pointer;
-}
-.modal-backdrop {
-  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.4);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 200;
-}
-.modal {
-  background: white;
-  padding: 2em;
-  border-radius: 1em;
-  box-shadow: 0 0 14px #20202055;
-}
-.modal h2 {
-  margin-top: 0;
-} */
-
-
 .app-layout {
   display: flex;
   flex-direction: row;
@@ -71,25 +7,33 @@
   flex: 1;
   max-width: 350px;
   padding: 2rem;
-  background: #fafafb;
-  border-right: 1px solid #ddd;
+  background: #fff; /* White background for the form area */
+  border-right: 1px solid #eee;
+  /* Use fixed width on desktop for better separation from 3D view */
 }
 .scene-panel {
   flex: 3;
-  background: #202025;
+  background: #1a1a1a; /* Black background for the 3D scene */
   display: flex;
   align-items: center;
   justify-content: center;
 }
+/* Mobile Optimization: Stack controls above the scene */
 @media (max-width: 768px) {
   .app-layout {
     flex-direction: column;
   }
   .controls-panel {
     max-width: none;
+    padding: 1rem 0.5rem; /* Reduced padding for mobile */
     border-right: none;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #eee;
+    order: 1; /* Controls first on mobile */
   }
-}
+  .scene-panel {
+      order: 2; /* Scene second on mobile */
+      height: 50vh; /* Give the scene some space, adjust as needed */
+  }
+} 
 
 
