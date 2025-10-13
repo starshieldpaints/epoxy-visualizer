@@ -21,9 +21,15 @@ export default function EpoxyStepper() {
       {loading && <SplashScreen onFinish={() => setLoading(false)} />}
       {!loading && (
         <div className="form-root" role="main">
-          <div style={{ textAlign: "center", marginBottom: "1.9rem", fontWeight: 800, fontSize: "1.3rem" }}>
-            Epoxy Flooring Visualizer
-          </div>
+          <header className="form-header">
+            <h1>Epoxy Flooring Visualizer</h1>
+            <p className="muted-text">Estimate materials, plan repairs, and share your epoxy project on the go.</p>
+            <div className="step-indicator" aria-label={`Step ${step + 1} of 3`}>
+              <span className={`dot${step === 0 ? " active" : ""}`}></span>
+              <span className={`dot${step === 1 ? " active" : ""}`}></span>
+              <span className={`dot${step === 2 ? " active" : ""}`}></span>
+            </div>
+          </header>
           {step === 0 && <EpoxyConfigForm onNext={handleNext} />}
           {step === 1 && <UserDetailsForm onNext={handleNext} onBack={handleBack} />}
           {step === 2 && <ResultPage data={data} onBack={handleBack} />}
