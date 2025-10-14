@@ -1,4 +1,12 @@
-export function calculateEpoxyKit({ area, epoxyType, floorThickness }) {
+const repairLookup = {
+  0.5: { density: 1.25, consumption: 0.625, wastage: 10, adjusted: 0.6875 },
+  1: { density: 1.25, consumption: 1.25, wastage: 10, adjusted: 1.375 },
+  2: { density: 1.25, consumption: 2.5, wastage: 10, adjusted: 2.75 },
+  3: { density: 1.25, consumption: 3.75, wastage: 10, adjusted: 4.125 },
+  5: { density: 1.25, consumption: 6.25, wastage: 10, adjusted: 6.875 }
+};
+
+export function calculateEpoxyKit({ area, epoxyType, floorThickness, needsRepair, repairThickness }) {
   const thickness = parseFloat(floorThickness);
 
   const rates = {
@@ -23,6 +31,20 @@ export function calculateEpoxyKit({ area, epoxyType, floorThickness }) {
   const screed = +(r.screedPerMM * thickness * area);
   const top = +(r.topPerMM * thickness * area);
   const pigment = +(r.pigment * area);
+
+  const repair = (() => {
+    if (needsRepair !== "Yes" || !repairThickness) return null;
+    const selected = repairLookup[repairThickness];
+    if (!selected) return null;
+    const baseTotal = +(selected.consumption * area).toFixed(3);
+    const adjustedTotal = +(selected.adjusted * area).toFixed(3);
+    return {
+      thickness: Number(repairThickness),
+      ...selected,
+      baseTotal,
+      adjustedTotal
+    };
+  })();
 
   return {
     kit: {
@@ -51,6 +73,7 @@ export function calculateEpoxyKit({ area, epoxyType, floorThickness }) {
     totalKitWeight: (primer + screed + top + pigment).toFixed(2),
     coverage: area,
     thickness,
-    epoxyType: key
+    epoxyType: key,
+    repair
   };
 }
