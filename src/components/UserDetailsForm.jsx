@@ -3,6 +3,14 @@ import React, { useState } from "react";
 export default function UserDetailsForm({ onNext, onBack }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", zip: "" });
   const canProceed = form.name && form.email && form.phone && form.zip;
+  const isSaving = status?.state === "saving";
+  const hasError = status?.state === "error";
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    if (!canProceed || isSaving) return;
+    onNext(form);
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
