@@ -72,6 +72,7 @@ const yesNoOptions = ["Yes", "No"];
 const firstTimeOptions = ["First Time", "Reapplication"];
 const quickThicknessOptions = [1, 2, 3, 4];
 
+
 export default function EpoxyConfigForm({ onNext }) {
   const [form, setForm] = useState({
     place: "",
@@ -181,12 +182,48 @@ export default function EpoxyConfigForm({ onNext }) {
             >{opt}</span>
           ))}
         </div>
-        {form.place === "Others" &&
+        {form.needsRepair === "Yes" && (
+          <div className="repair-panel">
+            <div className="repair-header">Select repair layer thickness</div>
+            <div className="chips-group compact" role="group" aria-label="Repair thickness">
+              {repairOptions.map(opt => (
+                <Chip
+                  key={opt.thickness}
+                  active={String(form.repairThickness) === String(opt.thickness)}
+                  onClick={() => handleChip("repairThickness", opt.thickness)}
+                >
+                  {opt.thickness} mm
+                </Chip>
+              ))}
+            </div>
+            {repairSelection && (
+              <div className="repair-details" role="note">
+                <div>
+                  Density: <strong>{repairSelection.density}</strong> kg/L
+                </div>
+                <div>
+                  Adjusted consumption: <strong>{repairSelection.adjusted}</strong> kg/m² (incl. {repairSelection.wastage}% wastage)
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+
+      <div className="form-section-grid two-up">
+        <section className="form-section">
+          <label className="form-label">
+            Area <span className="label-hint">(sq m)</span>
+          </label>
           <input
             className="form-input"
-            value={form.placeOther}
-            onChange={e => handleInput('placeOther', e.target.value)}
-            placeholder="Specify other location"
+            type="number"
+            min={1}
+            required
+            placeholder="Total coated area"
+            value={form.area}
+            inputMode="decimal"
+            onChange={e => handleInput("area", e.target.value)}
           />
         }
       </div>
@@ -251,9 +288,14 @@ export default function EpoxyConfigForm({ onNext }) {
         {form.floorType === "Other" &&
           <input
             className="form-input"
-            value={form.floorTypeOther}
-            onChange={e => handleInput('floorTypeOther', e.target.value)}
-            placeholder="Specify other floor type"
+            type="number"
+            min={0.1}
+            step={0.1}
+            required
+            placeholder="Average build thickness"
+            value={form.thickness}
+            inputMode="decimal"
+            onChange={e => handleInput("thickness", e.target.value)}
           />
         }
       </div>
@@ -327,17 +369,15 @@ export default function EpoxyConfigForm({ onNext }) {
           />
         )}
       </div>
-      {/* Colors and flakes */}
-      <div className="form-section">
-        <label className="form-label">Base Colour</label>
-        <div className="chips-group">
-          {baseColors.map(c =>
-            <span className={`chip${form.baseColor === c ? " selected" : ""}`} key={c}
-              onClick={() => handleChip('baseColor', c)} tabIndex={0}>
-              <span className={`color-swatch${form.baseColor === c ? " selected" : ""}`}
-                style={{ background: c.toLowerCase(), borderColor: '#aaa' }}></span>{c}
-            </span>
-          )}
+
+      <section className="form-section">
+        <label className="form-label">Type of Epoxy Finish</label>
+        <div className="chips-group" role="group" aria-label="Epoxy finish">
+          {epoxyFinishes.map(opt => (
+            <Chip key={opt} active={form.epoxyFinish === opt} onClick={() => handleChip("epoxyFinish", opt)}>
+              {opt}
+            </Chip>
+          ))}
         </div>
       </div>
       <div className="form-section">
@@ -356,43 +396,54 @@ export default function EpoxyConfigForm({ onNext }) {
           <p className="muted-text">Top coat not required for the selected finish.</p>
         )}
       </div>
-      <div className="form-section">
+
+      <section className="form-section">
         <label className="form-label">Want Metallic flakes / Crystal?</label>
-        <div className="chips-group">
-          {["Yes", "No"].map(v =>
-            <span key={v} className={`chip${form.flakes === v ? " selected" : ""}`} tabIndex={0}
-              onClick={() => handleChip('flakes', v)}>{v}</span>
-          )}
+        <div className="chips-group" role="group" aria-label="Flake preference">
+          {yesNoOptions.map(v => (
+            <Chip key={v} active={form.flakes === v} onClick={() => handleChip("flakes", v)}>
+              {v}
+            </Chip>
+          ))}
         </div>
         {form.flakes === "Yes" && (
-          <div className="chips-group" style={{ marginTop: "0.8em" }}>
-            {flakeOptions.map(f =>
-              <span className={`chip${form.flakesType === f ? " selected" : ""}`} key={f}
-                onClick={() => handleChip('flakesType', f)} tabIndex={0}>{f}
-              </span>
-            )}
+          <div className="chips-group" role="group" aria-label="Flake selection">
+            {flakeOptions.map(f => (
+              <Chip key={f} active={form.flakesType === f} onClick={() => handleChip("flakesType", f)}>
+                {f}
+              </Chip>
+            ))}
           </div>
         )}
+      </section>
+
+      <div className="form-section-grid two-up">
+        <section className="form-section">
+          <label className="form-label">Want a Protective Coating?</label>
+          <div className="chips-group" role="group" aria-label="Protective coating">
+            {yesNoOptions.map(v => (
+              <Chip key={v} active={form.clearCoat === v} onClick={() => handleChip("clearCoat", v)}>
+                {v}
+              </Chip>
+            ))}
+          </div>
+        </section>
+
+        <section className="form-section">
+          <label className="form-label">Tools Add (multi-select)</label>
+          <div className="chips-group" role="group" aria-label="Tools">
+            {toolOptions.map(t => (
+              <Chip key={t} active={form.tools.includes(t)} onClick={() => toggleTool(t)}>
+                {t}
+              </Chip>
+            ))}
+          </div>
+        </section>
       </div>
-      <div className="form-section">
-        <label className="form-label">Want a Protective Coating?</label>
-        <div className="chips-group">
-          {["Yes", "No"].map(v =>
-            <span key={v} className={`chip${form.clearCoat === v ? " selected" : ""}`} tabIndex={0}
-              onClick={() => handleChip('clearCoat', v)}>{v}</span>
-          )}
-        </div>
-      </div>
-      <div className="form-section">
-        <label className="form-label">Tools Add (multi-select):</label>
-        <div className="chips-group">
-          {toolOptions.map(t =>
-            <span className={`chip${form.tools.includes(t) ? " selected" : ""}`} key={t}
-              onClick={() => toggleTool(t)} tabIndex={0}>{t}</span>
-          )}
-        </div>
-      </div>
-      <button className="btn-main" disabled={!canProceed}>Next</button>
+
+      <button className="btn-main" disabled={!canProceed}>
+        Continue to contact details
+      </button>
     </form>
   );
 }

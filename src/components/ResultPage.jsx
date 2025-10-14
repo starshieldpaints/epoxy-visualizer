@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { calculateEpoxyKit } from "../utils/epoxyCalc";
 
 export default function ResultPage({ data, onBack }) {
