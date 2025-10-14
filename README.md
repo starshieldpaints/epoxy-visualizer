@@ -6,10 +6,9 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 The epoxy calculator can push project details into a Firebase project for Starshield follow-up. To enable this integration:
 
-1. Run `npm install` after pulling the project so the Firebase SDK dependency is available locally.
-2. Duplicate `.env.example` to `.env.local` (or `.env`) in the project root.
-3. Populate each `REACT_APP_FIREBASE_*` value with credentials from your Firebase app.
-4. Restart the development server so Create React App can expose the environment variables.
+1. Duplicate `.env.example` to `.env.local` (or `.env`) in the project root.
+2. Populate each `REACT_APP_FIREBASE_*` value with credentials from your Firebase app.
+3. Restart the development server so Create React App can expose the environment variables.
 
 If the keys are not provided the calculator will still work locally, but lead submissions will stay offline and an error banner will appear on the results step.
 

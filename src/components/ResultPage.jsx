@@ -1,47 +1,18 @@
 import React, { useMemo } from "react";
 import { calculateEpoxyKit } from "../utils/epoxyCalc";
 
-const statusCopy = {
-  idle: {
-    tone: "neutral",
-    title: "Ready to share",
-    description: "Save the summary or send it to your crew."
-  },
-  saving: {
-    tone: "info",
-    title: "Syncing with Starshield",
-    description: "We're logging your project so a specialist can reach out."
-  },
-  saved: {
-    tone: "success",
-    title: "Starshield has your project",
-    description: "Expect a follow-up with kit recommendations tailored to your site."
-  },
-  error: {
-    tone: "danger",
-    title: "Could not reach Starshield",
-    description: "Use the summary below while you verify the Firebase credentials."
-  }
-};
+export default function ResultPage({ data, onBack }) {
+  const area = Number(data.area);
+  const thickness = Number(data.thickness);
+  const epoxyType = data.epoxyType || data.epoxyDesignerType || data.epoxyMainType;
 
-export default function ResultPage({ data, onBack, onReset, calculation, leadStatus }) {
-  const status = statusCopy[leadStatus?.state || "idle"];
-
-  const result = useMemo(() => {
-    if (calculation) return calculation;
-
-    const area = Number(data.area);
-    const thickness = Number(data.thickness);
-    const epoxyType = data.epoxyType || data.epoxyDesignerType || data.epoxyMainType;
-
-    return calculateEpoxyKit({
-      area,
-      epoxyType,
-      floorThickness: thickness,
-      needsRepair: data.needsRepair,
-      repairThickness: data.repairThickness
-    });
-  }, [calculation, data]);
+  const result = calculateEpoxyKit({
+    area,
+    epoxyType,
+    floorThickness: thickness,
+    needsRepair: data.needsRepair,
+    repairThickness: data.repairThickness
+  });
 
   const summary = [
     { label: "Application", value: data.placeFinal },
@@ -72,22 +43,9 @@ export default function ResultPage({ data, onBack, onReset, calculation, leadSta
 
   return (
     <div className="result-layout">
-      <div className={`status-card ${status.tone}`}>
-        <div className="status-meta">
-          <span className="status-kicker">Starshield update</span>
-          <h2>{status.title}</h2>
-          <p>{status.description}</p>
-          {leadStatus?.reference && (
-            <span className="status-reference">Reference ID: {leadStatus.reference}</span>
-          )}
-          {leadStatus?.state === "error" && leadStatus?.message && (
-            <span className="status-reference">{leadStatus.message}</span>
-          )}
-        </div>
-        <div className="status-actions">
-          <button type="button" className="btn-main" onClick={onReset}>Plan another area</button>
-          <button type="button" className="btn-link" onClick={onBack}>Edit details</button>
-        </div>
+      <div className="result-header">
+        <h2>Epoxy Kit Calculation</h2>
+        <p className="muted-text">Calculation summary based on your selections.</p>
       </div>
 
       <section className="summary-card" aria-label="Project summary">
@@ -182,6 +140,8 @@ export default function ResultPage({ data, onBack, onReset, calculation, leadSta
           <strong>{result.epoxyType}</strong>
         </div>
       </div>
+
+      <button className="btn-main" onClick={onBack}>Back</button>
     </div>
   );
 }
