@@ -95,12 +95,29 @@ export default function EpoxyConfigForm({ onNext }) {
     tools: []
   });
 
-  const handleChip = (key, value) => setForm(f => ({ ...f, [key]: value }));
-  const handleInput = (key, value) => setForm(f => ({ ...f, [key]: value }));
-  const toggleTool = t => setForm(f => ({
-    ...f,
-    tools: f.tools.includes(t) ? f.tools.filter(x => x !== t) : [...f.tools, t]
-  }));
+  const handleChip = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
+  const handleInput = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
+  const toggleTool = tool =>
+    setForm(prev => ({
+      ...prev,
+      tools: prev.tools.includes(tool)
+        ? prev.tools.filter(item => item !== tool)
+        : [...prev.tools, tool]
+    }));
+
+  const repairSelection = useMemo(
+    () => repairOptions.find(opt => String(opt.thickness) === String(form.repairThickness)),
+    [form.repairThickness]
+  );
+
+  const epoxyType = form.epoxyFinish || "";
+
+  const availableTopColors = useMemo(() => {
+    if (form.epoxyFinish === "Multicolor") return multicolorTopColors;
+    if (form.epoxyFinish === "Metallic") return metallicColors;
+    if (form.epoxyFinish === "Clear") return [];
+    return defaultTopColors;
+  }, [form.epoxyFinish]);
 
   const repairSelection = useMemo(
     () => repairOptions.find(opt => String(opt.thickness) === String(form.repairThickness)),
@@ -154,6 +171,19 @@ export default function EpoxyConfigForm({ onNext }) {
     form.baseColor &&
     (availableTopColors.length === 0 || form.topColor) &&
     (form.flakes === "No" || form.flakesType);
+
+  const submitForm = event => {
+    event.preventDefault();
+    if (!canProceed) return;
+
+    onNext({
+      ...form,
+      epoxyType,
+      placeFinal: form.place === "Others" ? form.placeOther : form.place,
+      floorTypeFinal: form.floorType === "Other" ? form.floorTypeOther : form.floorType,
+      repairOption: repairSelection || null
+    });
+  };
 
   return (
     <form
