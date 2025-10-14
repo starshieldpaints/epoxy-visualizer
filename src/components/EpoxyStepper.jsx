@@ -78,35 +78,19 @@ export default function EpoxyStepper() {
     <>
       {loading && <SplashScreen onFinish={() => setLoading(false)} />}
       {!loading && (
-        <div className="app-shell" role="main">
-          <div className="app-inner">
-            <header className="brand-banner">
-              <div className="brand-copy">
-                <span className="brand-kicker">Starshield</span>
-                <h1>Epoxy Flooring Visualizer</h1>
-                <p className="brand-subtitle">
-                  Plan, repair, and estimate epoxy coatings with a workflow tuned for job sites and mobile crews.
-                </p>
-                <div>
-                  <div className="progress-track" role="progressbar" aria-valuemin={1} aria-valuemax={3} aria-valuenow={step + 1}>
-                    <span className="progress-meter" style={{ width: `${progress}%` }} />
-                  </div>
-                  <span className="progress-label">Step {step + 1} of 3</span>
-                </div>
-              </div>
-              <div className="brand-visual" aria-hidden="true">
-                <div className="brand-burst">
-                  <span className="burst-inner"></span>
-                </div>
-                <span className="brand-tagline">Trusted by Starshield applicators</span>
-              </div>
-            </header>
-            {step === 0 && <EpoxyConfigForm onNext={handleConfigNext} />}
-            {step === 1 && <UserDetailsForm onNext={handleUserNext} onBack={handleBack} status={leadStatus} />}
-            {step === 2 && (
-              <ResultPage data={data} calculation={calculation} onBack={handleBack} onReset={handleReset} leadStatus={leadStatus} />
-            )}
-          </div>
+        <div className="form-root" role="main">
+          <header className="form-header">
+            <h1>Epoxy Flooring Visualizer</h1>
+            <p className="muted-text">Estimate materials, plan repairs, and share your epoxy project on the go.</p>
+            <div className="step-indicator" aria-label={`Step ${step + 1} of 3`}>
+              <span className={`dot${step === 0 ? " active" : ""}`}></span>
+              <span className={`dot${step === 1 ? " active" : ""}`}></span>
+              <span className={`dot${step === 2 ? " active" : ""}`}></span>
+            </div>
+          </header>
+          {step === 0 && <EpoxyConfigForm onNext={handleNext} />}
+          {step === 1 && <UserDetailsForm onNext={handleNext} onBack={handleBack} />}
+          {step === 2 && <ResultPage data={data} onBack={handleBack} />}
         </div>
       )}
     </>
