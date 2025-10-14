@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 export default function UserDetailsForm({ onNext, onBack }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", zip: "" });
