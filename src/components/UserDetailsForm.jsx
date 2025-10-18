@@ -1,20 +1,41 @@
 import React, { useMemo, useState } from "react";
 
-export default function UserDetailsForm({ onNext, onBack }) {
+const PHONE_REGEX = /^\d{10}$/;
+
+export default function UserDetailsForm({ onNext, onBack, status }) {
   const [form, setForm] = useState({ name: "", email: "", phone: "", zip: "" });
-  const canProceed = form.name && form.email && form.phone && form.zip;
+
+  const phoneIsValid = useMemo(() => PHONE_REGEX.test(form.phone), [form.phone]);
+  const canProceed = form.name && form.email && form.zip && phoneIsValid;
   const isSaving = status?.state === "saving";
   const hasError = status?.state === "error";
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (!canProceed || isSaving) return;
-    onNext(form);
+  const handlePhoneChange = (event) => {
+    const digitsOnly = event.target.value.replace(/\D/g, "").slice(0, 15);
+    setForm((prev) => ({ ...prev, phone: digitsOnly }));
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    if (canProceed) onNext(form);
+  const getFormattedPhone = () => {
+    const digits = form.phone.replace(/\D/g, "");
+    if (!digits) return "";
+    if (digits.startsWith("91") && digits.length >= 12) {
+      return `+${digits}`;
+    }
+    return `+91${digits}`;
+  };
+
+  const normalizedPayload = () => ({
+    ...form,
+    name: form.name.trim(),
+    email: form.email.trim(),
+    phone: getFormattedPhone(),
+    zip: form.zip.trim(),
+  });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (!canProceed || isSaving) return;
+    onNext(normalizedPayload());
   };
 
   return (
@@ -44,13 +65,18 @@ export default function UserDetailsForm({ onNext, onBack }) {
       <input
         id="phone"
         className="form-input"
-        placeholder="Phone number"
+        placeholder="10-digit phone number"
         type="tel"
         inputMode="tel"
         value={form.phone}
-        onChange={e => setForm({ ...form, phone: e.target.value })}
+        onChange={handlePhoneChange}
+        maxLength={15}
+        aria-invalid={!phoneIsValid}
         required
       />
+      {!phoneIsValid && form.phone.length > 0 && (
+        <p className="error-text" role="alert">Enter a valid 10-digit phone number.</p>
+      )}
       <label className="form-label" htmlFor="zip">ZIP / Pin code</label>
       <input
         id="zip"
@@ -63,8 +89,11 @@ export default function UserDetailsForm({ onNext, onBack }) {
       />
       <div className="button-row">
         <button type="button" className="btn-link" onClick={onBack}>Back</button>
-        <button type="submit" className="btn-main" disabled={!canProceed}>Continue</button>
+        <button type="submit" className="btn-main" disabled={!canProceed || isSaving}>
+          {isSaving ? "Saving..." : "Submit"}
+        </button>
       </div>
+      {hasError && status?.message && <p className="error-text" role="alert">{status.message}</p>}
     </form>
   );
 }

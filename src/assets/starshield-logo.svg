@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 160" role="img" aria-labelledby="title desc">
+  <title id="title">Starshield Smart Paints &amp; Coatings</title>
+  <desc id="desc">Red faceted star with Starshield wordmark in red and tagline in black.</desc>
+  <defs>
+    <linearGradient id="starGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444"/>
+      <stop offset="100%" stop-color="#b91c1c"/>
+    </linearGradient>
+  </defs>
+  <rect width="460" height="160" fill="white" rx="12" ry="12"/>
+  <g transform="translate(24 20)">
+    <polygon fill="url(#starGradient)" stroke="#991b1b" stroke-width="4" points="80,0 96,58 154,58 108,94 124,152 80,116 36,152 52,94 6,58 64,58"/>
+    <line x1="188" y1="0" x2="188" y2="120" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/>
+    <g transform="translate(210 24)">
+      <text font-family="Inter, 'Segoe UI', sans-serif" font-size="56" font-weight="800" fill="#b91c1c">STARSHIELD</text>
+      <text font-family="Inter, 'Segoe UI', sans-serif" font-size="26" font-weight="500" fill="#111827" y="52">Smart Paints &amp; Coatings</text>
+    </g>
+  </g>
+</svg>

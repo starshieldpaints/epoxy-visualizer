@@ -5,6 +5,7 @@ import ResultPage from "./ResultPage";
 import SplashScreen from "./SplashScreen";
 import { saveLead } from "../services/firebase";
 import { calculateEpoxyKit } from "../utils/epoxyCalc";
+import starshieldLogo from "../assets/starshield-logo.jpg";
 
 export default function EpoxyStepper() {
   const [step, setStep] = useState(0);
@@ -20,7 +21,8 @@ export default function EpoxyStepper() {
       epoxyType: data.epoxyType || data.epoxyDesignerType || data.epoxyMainType,
       floorThickness: Number(data.thickness),
       needsRepair: data.needsRepair,
-      repairThickness: data.repairThickness
+      repairThickness: data.repairThickness,
+      protectiveCoat: data.clearCoat
     });
   }, [data]);
 
@@ -43,7 +45,8 @@ export default function EpoxyStepper() {
           epoxyType: payload.epoxyType || payload.epoxyDesignerType || payload.epoxyMainType,
           floorThickness: Number(payload.thickness),
           needsRepair: payload.needsRepair,
-          repairThickness: payload.repairThickness
+          repairThickness: payload.repairThickness,
+          protectiveCoat: payload.clearCoat
         });
 
       const docRef = await saveLead({ ...payload, calculation: kit });
@@ -66,20 +69,15 @@ export default function EpoxyStepper() {
     setStep(s => Math.max(0, s - 1));
   };
 
-  const handleReset = () => {
-    setData({});
-    setLeadStatus({ state: "idle", message: null, reference: null });
-    setStep(0);
-  };
-
-  const progress = ((step + 1) / 3) * 100;
-
   return (
     <>
       {loading && <SplashScreen onFinish={() => setLoading(false)} />}
       {!loading && (
         <div className="form-root" role="main">
           <header className="form-header">
+            <div className="brand" aria-label="Starshield Smart Paints & Coatings">
+              <img src={starshieldLogo} alt="Starshield Smart Paints & Coatings" className="brand-logo" />
+            </div>
             <h1>Epoxy Flooring Visualizer</h1>
             <p className="muted-text">Estimate materials, plan repairs, and share your epoxy project on the go.</p>
             <div className="step-indicator" aria-label={`Step ${step + 1} of 3`}>
@@ -88,8 +86,14 @@ export default function EpoxyStepper() {
               <span className={`dot${step === 2 ? " active" : ""}`}></span>
             </div>
           </header>
-          {step === 0 && <EpoxyConfigForm onNext={handleNext} />}
-          {step === 1 && <UserDetailsForm onNext={handleNext} onBack={handleBack} />}
+          {step === 0 && <EpoxyConfigForm onNext={handleConfigNext} />}
+          {step === 1 && (
+            <UserDetailsForm
+              onNext={handleUserNext}
+              onBack={handleBack}
+              status={leadStatus}
+            />
+          )}
           {step === 2 && <ResultPage data={data} onBack={handleBack} />}
         </div>
       )}

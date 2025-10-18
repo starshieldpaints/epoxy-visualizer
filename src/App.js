@@ -5,4 +5,5 @@ import './styles/form.css';
 function App() {
   return <EpoxyStepper />;
 }
+
 export default App;

@@ -25,7 +25,7 @@ export default function SplashScreen({ onFinish }) {
       style={{
         position: "fixed",
         inset: 0,
-        background: "radial-gradient(circle at top left, #facc15 0%, rgba(249, 115, 22, 0.7) 45%, #9f1239 100%)",
+        background: "radial-gradient(circle at 20% 15%, #fef2f2 0%, rgba(248, 113, 113, 0.72) 35%, #991b1b 65%, #450a0a 100%)",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -41,8 +41,8 @@ export default function SplashScreen({ onFinish }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         style={{
-          background: "rgba(15, 23, 42, 0.25)",
-          border: "1px solid rgba(255,255,255,0.25)",
+          background: "rgba(153, 27, 27, 0.28)",
+          border: "1px solid rgba(255,255,255,0.22)",
           borderRadius: "24px",
           padding: "2.4rem 2rem",
           textAlign: "center",
