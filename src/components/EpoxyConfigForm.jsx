@@ -71,8 +71,11 @@ const yesNoOptions = ["Yes", "No"];
 const firstTimeOptions = ["First Time", "Reapplication"];
 const quickThicknessOptions = [1, 2, 3, 4];
 
-const finishAsset = (filename) =>
-  `${process.env.PUBLIC_URL || ""}/finishes/${filename}`;
+// const finishAsset = (filename) =>
+//   `${process.env.PUBLIC_URL || ""}/finishes/${filename}`;
+
+
+const finishAsset = (filename) => `./finishes/${filename}`;
 
 const finishPreviews = {
   Plain: {
@@ -124,55 +127,64 @@ const placePreviews = {
     title: "Home Interior",
     description: "Comfortable residential spaces finished with easy-clean gloss layers.",
     letter: "H",
-    background: "linear-gradient(135deg, #fee2e2 0%, #fca5a5 45%, #dc2626 100%)"
+    background: "linear-gradient(135deg, #fee2e2 0%, #fca5a5 45%, #dc2626 100%)",
+    image: finishAsset("home.png")
   },
   Office: {
     title: "Office Space",
     description: "Stylish professional floors that impress clients and team alike.",
     letter: "O",
-    background: "linear-gradient(135deg, #ffe4e6 0%, #fb7185 45%, #9f1239 100%)"
+    background: "linear-gradient(135deg, #ffe4e6 0%, #fb7185 45%, #9f1239 100%)",
+    image: finishAsset("office.png")
   },
   Factory: {
     title: "Factory Floor",
     description: "Heavy-duty protection for high-traffic manufacturing environments.",
     letter: "F",
-    background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 35%, #7f1d1d 100%)"
+    background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 35%, #7f1d1d 100%)",
+    image: finishAsset("factory.png")
   },
   Showroom: {
     title: "Showroom",
     description: "High-gloss surfaces that highlight your premium products.",
     letter: "S",
-    background: "linear-gradient(135deg, #fff1f2 0%, #f9a8d4 40%, #be123c 100%)"
+    background: "linear-gradient(135deg, #fff1f2 0%, #f9a8d4 40%, #be123c 100%)",
+    image: finishAsset("showroom.png")
   },
   Hospital: {
     title: "Healthcare",
     description: "Hygienic, seamless floors ideal for sterile care areas.",
     letter: "H",
-    background: "linear-gradient(135deg, #fee2e2 0%, #f8b4b4 40%, #991b1b 100%)"
+    background: "linear-gradient(135deg, #fee2e2 0%, #f8b4b4 40%, #991b1b 100%)",
+    image: finishAsset("hospital.png")
   },
   School: {
     title: "School",
     description: "Durable systems engineered for classrooms and corridors.",
     letter: "Sc",
-    background: "linear-gradient(135deg, #fee2e2 0%, #fb7185 40%, #b91c1c 100%)"
+    background: "linear-gradient(135deg, #fee2e2 0%, #fb7185 40%, #b91c1c 100%)",
+    image: finishAsset("school.png")
   },
   Warehouse: {
     title: "Warehouse",
     description: "Anti-dust coatings to manage forklifts and storage loads.",
     letter: "W",
-    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 35%, #991b1b 100%)"
+    background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 35%, #991b1b 100%)",
+    image: finishAsset("warehouse.png")
   },
   Garage: {
     title: "Garage",
     description: "Oil-resistant layers ideal for garages and parking decks.",
     letter: "G",
-    background: "linear-gradient(135deg, #fef2f2 0%, #f87171 45%, #450a0a 100%)"
+    background: "linear-gradient(135deg, #fef2f2 0%, #f87171 45%, #450a0a 100%)",
+    image: finishAsset("garage.png")
   },
   Parking: {
     title: "Parking",
     description: "Skid-resistant textures to keep vehicles safe and steady.",
     letter: "P",
-    background: "linear-gradient(135deg, #fee2e2 0%, #fecaca 45%, #991b1b 100%)"
+    background: "linear-gradient(135deg, #fee2e2 0%, #fecaca 45%, #991b1b 100%)",
+    image: finishAsset("parking.png")
   }
 };
 
@@ -181,43 +193,50 @@ const floorPreviews = {
     title: "Cemented Base",
     description: "Smooth cement subfloors prepped for maximum adhesion.",
     letter: "C",
-    background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #64748b 100%)"
+    background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #64748b 100%)",
+    image: finishAsset("cemented.png")
   },
   Tiled: {
     title: "Tiled Surface",
     description: "Tile substrates levelled for a continuous epoxy appearance.",
     letter: "T",
-    background: "linear-gradient(135deg, #fef2f2 0%, #fecdd3 45%, #9f1239 100%)"
+    background: "linear-gradient(135deg, #fef2f2 0%, #fecdd3 45%, #9f1239 100%)",
+    image: finishAsset("tiled.png")
   },
   Marble: {
     title: "Marble",
     description: "Luxurious marble preserved under a crystal-clear shield.",
     letter: "M",
-    background: "linear-gradient(135deg, #f8fafc 0%, #e0f2fe 45%, #475569 100%)"
+    background: "linear-gradient(135deg, #f8fafc 0%, #e0f2fe 45%, #475569 100%)",
+    image: finishAsset("marble.png")
   },
   Granite: {
     title: "Granite",
     description: "Dense granite base sealed for a refined mirror sheen.",
     letter: "G",
-    background: "linear-gradient(135deg, #e2e8f0 0%, #cbd5f5 40%, #334155 100%)"
+    background: "linear-gradient(135deg, #e2e8f0 0%, #cbd5f5 40%, #334155 100%)",
+    image: finishAsset("granite.png")
   },
   Wooden: {
     title: "Wooden",
     description: "Timber floors protected by flexible epoxy cushioning.",
     letter: "W",
-    background: "linear-gradient(135deg, #fee2e2 0%, #fbcfe8 35%, #7f1d1d 100%)"
+    background: "linear-gradient(135deg, #fee2e2 0%, #fbcfe8 35%, #7f1d1d 100%)",
+    image: finishAsset("wooden.png")
   },
   "Kota Stone": {
     title: "Kota Stone",
     description: "Natural Kota stone sealed to resist stains and wear.",
     letter: "K",
-    background: "linear-gradient(135deg, #f1f5f9 0%, #d9f99d 45%, #365314 100%)"
+    background: "linear-gradient(135deg, #f1f5f9 0%, #d9f99d 45%, #365314 100%)",
+    image: finishAsset("kota.png")
   },
   Precast: {
     title: "Precast",
     description: "Precast slabs primed for a level, uniform epoxy coat.",
     letter: "P",
-    background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 45%, #64748b 100%)"
+    background: "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 45%, #64748b 100%)",
+    image: finishAsset("precast.png")
   }
 };
 

@@ -16,7 +16,6 @@ const defaultState = {
 function HomePage() {
   const [state, setState] = useState(defaultState);
 
-  // Sync floor controls to scene/user state
   const updateState = (updates) => setState((prev) => ({ ...prev, ...updates }));
 
   return (
