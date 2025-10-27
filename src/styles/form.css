@@ -800,7 +800,7 @@ body {
   border: none;
   background-color: transparent;
   /* Match container background initially */
-  padding: 0.65rem 0.5rem;
+  padding: 0.65rem 0.75rem;
   /* Match vertical padding of .form-input */
   font-size: 0.98rem;
   /* Match font size of .form-input */
@@ -809,14 +809,18 @@ body {
   /* Visual Separation from the number input */
   border-right: 1.2px solid #e2e8f0;
 
-  /* Fixed width to neatly contain the widest country code (+880) */
-  width: 90px;
-  text-align: center;
+  /* Allow enough space for long country names and codes */
+  flex: 0 0 180px;
+  min-width: 150px;
+  max-width: 60%;
+  width: auto;
+  text-align: left;
 
   /* Hide default dropdown arrow (optional, improves modern look) */
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  white-space: nowrap;
 }
 
 /* Adjust select padding when container is focused to match background change */
@@ -850,12 +854,12 @@ body {
 
 @media (max-width: 768px) {
   .country-code-select-integrated {
-    padding: 0.6rem 0.4rem;
+    padding: 0.6rem 0.6rem;
     /* Adjust vertical padding */
     font-size: 0.95rem;
     /* Match smaller input font size */
-    width: 80px;
-    /* Slight reduction in width */
+    flex: 0 0 140px;
+    min-width: 120px;
   }
 
   .phone-number-input-integrated {

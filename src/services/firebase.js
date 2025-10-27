@@ -163,6 +163,14 @@ const instance = initFirebase();
 export const db = instance?.db;
 export const auth = instance?.auth;
 
+if (auth && process.env.NODE_ENV === "development") {
+  try {
+    auth.settings.appVerificationDisabledForTesting = true;
+  } catch (err) {
+    console.warn("Unable to disable app verification for testing", err);
+  }
+}
+
 // Utility function to save leads
 export async function saveLead(lead) {
   if (!db) throw new Error("Firestore not initialized");

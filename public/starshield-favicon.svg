@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="StarShield logo">
+  <defs>
+    <radialGradient id="starGradient" cx="32" cy="24" r="30" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff5a5a"/>
+      <stop offset="0.55" stop-color="#d3212c"/>
+      <stop offset="1" stop-color="#b01118"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="32" cy="56" rx="18" ry="4.5" fill="#b6b6b6" opacity="0.45"/>
+  <polygon
+    points="32,6 37.88,23.91 56.73,23.97 41.51,35.09 47.28,53.03 32,42 16.72,53.03 22.49,35.09 7.27,23.97 26.12,23.91"
+    fill="url(#starGradient)"
+  />
+  <g stroke="#ffffff" stroke-width="3" stroke-linecap="round">
+    <line x1="32" y1="32" x2="32" y2="6"/>
+    <line x1="32" y1="32" x2="56.73" y2="23.97"/>
+    <line x1="32" y1="32" x2="47.28" y2="53.03"/>
+    <line x1="32" y1="32" x2="16.72" y2="53.03"/>
+    <line x1="32" y1="32" x2="7.27" y2="23.97"/>
+  </g>
+</svg>

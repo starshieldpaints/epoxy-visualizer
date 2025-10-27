@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { calculateEpoxyKit } from "../utils/epoxyCalc";
@@ -232,52 +232,68 @@ const generatePdfDoc = async (data, result, area, thickness) => {
 export default function ResultPage({ data, onBack }) {
   const [emailStatus, setEmailStatus] = useState("idle");
 
-  const area = Number(data.area);
-  const thickness = Number(data.thickness);
-  const epoxyType =
-    data.epoxyType || data.epoxyDesignerType || data.epoxyMainType;
+  const area = useMemo(() => Number(data.area) || 0, [data.area]);
+  const thickness = useMemo(() => Number(data.thickness) || 0, [data.thickness]);
+  const epoxyType = useMemo(
+    () => data.epoxyType || data.epoxyDesignerType || data.epoxyMainType,
+    [data.epoxyType, data.epoxyDesignerType, data.epoxyMainType]
+  );
 
-  const result = calculateEpoxyKit({
-    area,
-    epoxyType,
-    floorThickness: thickness,
-    needsRepair: data.needsRepair,
-    repairThickness: data.repairThickness,
-    protectiveCoat: data.clearCoat,
-  });
+  const result = useMemo(
+    () =>
+      calculateEpoxyKit({
+        area,
+        epoxyType,
+        floorThickness: thickness,
+        needsRepair: data.needsRepair,
+        repairThickness: data.repairThickness,
+        protectiveCoat: data.clearCoat
+      }),
+    [area, epoxyType, thickness, data.needsRepair, data.repairThickness, data.clearCoat]
+  );
 
-  const summary = [
-    { label: "Application", value: data.placeFinal },
-    { label: "Floor Type", value: data.floorTypeFinal },
-    { label: "Surface Uneven", value: data.surfaceUneven },
-    { label: "Repairing Needed", value: data.needsRepair },
-    {
-      label: "Repair Thickness",
-      value:
-        data.needsRepair === "Yes" && data.repairOption
-          ? `${data.repairOption.thickness} mm`
-          : data.needsRepair === "Yes"
-            ? "Not selected"
-            : "Not required",
-    },
-    { label: "Application Type", value: data.firstTime },
-    { label: "Epoxy Finish", value: data.epoxyType },
-    { label: "Base Colour", value: data.baseColor },
-    { label: "Top Colour", value: data.topColor || "Not required" },
-    {
-      label: "Flakes",
-      value: data.flakes === "Yes" ? data.flakesType || "Preferred" : "No",
-    },
-    { label: "Protective Coat", value: data.clearCoat },
-    {
-      label: "Tools Added",
-      value: data.tools && data.tools.length ? data.tools.join(", ") : "None",
-    },
-    { label: "Name", value: data.name },
-    { label: "Email", value: data.email },
-    { label: "Phone", value: data.phone },
-    { label: "ZIP / Pin", value: data.zip },
-  ].filter((item) => item.value && item.value !== "");
+  const packagePlan = useMemo(
+    () => Object.entries(result?.packages || {}),
+    [result]
+  );
+  const repairDetails = result?.repair || null;
+
+  const summary = useMemo(
+    () =>
+      [
+        { label: "Application", value: data.placeFinal },
+        { label: "Floor Type", value: data.floorTypeFinal },
+        { label: "Surface Uneven", value: data.surfaceUneven },
+        { label: "Repairing Needed", value: data.needsRepair },
+        {
+          label: "Repair Thickness",
+          value:
+            data.needsRepair === "Yes" && data.repairOption
+              ? `${data.repairOption.thickness} mm`
+              : data.needsRepair === "Yes"
+                ? "Not selected"
+                : "Not required",
+        },
+        { label: "Application Type", value: data.firstTime },
+        { label: "Epoxy Finish", value: data.epoxyType },
+        { label: "Base Colour", value: data.baseColor },
+        { label: "Top Colour", value: data.topColor || "Not required" },
+        {
+          label: "Flakes",
+          value: data.flakes === "Yes" ? data.flakesType || "Preferred" : "No",
+        },
+        { label: "Protective Coat", value: data.clearCoat },
+        {
+          label: "Tools Added",
+          value: data.tools && data.tools.length ? data.tools.join(", ") : "None",
+        },
+        { label: "Name", value: data.name },
+        { label: "Email", value: data.email },
+        { label: "Phone", value: data.phone },
+        { label: "ZIP / Pin", value: data.zip },
+      ].filter((item) => item.value && item.value !== ""),
+    [data]
+  );
 
   const handleDownloadReport = useCallback(async () => {
     try {
@@ -334,7 +350,7 @@ export default function ResultPage({ data, onBack }) {
 
     sendReportEmail();
 
-  }, []);
+  }, [area, data, result, summary, thickness]);
 
   return (
     <div className="result-layout">
@@ -364,9 +380,74 @@ export default function ResultPage({ data, onBack }) {
           ))}
         </dl>
       </section>
+
+      {packagePlan.length > 0 && (
+        <section className="summary-card" aria-label="Package plan">
+          <h3>Pack Plan</h3>
+          <div style={{ overflowX: "auto" }}>
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+                fontSize: "0.95rem"
+              }}
+            >
+              <thead>
+                <tr>
+                  <th style={{ textAlign: "left", padding: "0.5rem", borderBottom: "1px solid #e5e7eb" }}>Package</th>
+                  <th style={{ textAlign: "right", padding: "0.5rem", borderBottom: "1px solid #e5e7eb" }}>Pack Size (kg)</th>
+                  <th style={{ textAlign: "right", padding: "0.5rem", borderBottom: "1px solid #e5e7eb" }}>Coverage / Pack (m^2)</th>
+                  <th style={{ textAlign: "right", padding: "0.5rem", borderBottom: "1px solid #e5e7eb" }}>Required Packs</th>
+                  <th style={{ textAlign: "right", padding: "0.5rem", borderBottom: "1px solid #e5e7eb" }}>Total Pack Weight (kg)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {packagePlan.map(([section, values]) => (
+                  <tr key={section}>
+                    <th scope="row" style={{ textAlign: "left", padding: "0.5rem", borderBottom: "1px solid #f1f5f9" }}>
+                      {section}
+                    </th>
+                    <td style={{ textAlign: "right", padding: "0.5rem", borderBottom: "1px solid #f1f5f9" }}>{Number(values.packSizeKg).toFixed(2)}</td>
+                    <td style={{ textAlign: "right", padding: "0.5rem", borderBottom: "1px solid #f1f5f9" }}>{Number(values.coveragePerPack).toFixed(2)}</td>
+                    <td style={{ textAlign: "right", padding: "0.5rem", borderBottom: "1px solid #f1f5f9" }}>{values.requiredPacks}</td>
+                    <td style={{ textAlign: "right", padding: "0.5rem", borderBottom: "1px solid #f1f5f9" }}>{Number(values.totalPackWeight).toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {repairDetails && (
+        <section className="summary-card" aria-label="Repair layer details">
+          <h3>Repair Layer</h3>
+          <dl className="summary-grid">
+            <div className="summary-item">
+              <dt>Thickness</dt>
+              <dd>{repairDetails.thickness} mm</dd>
+            </div>
+            <div className="summary-item">
+              <dt>Density</dt>
+              <dd>{repairDetails.density} kg/L</dd>
+            </div>
+            <div className="summary-item">
+              <dt>Consumption</dt>
+              <dd>{repairDetails.consumption} kg/m^2</dd>
+            </div>
+            <div className="summary-item">
+              <dt>Adjusted Total</dt>
+              <dd>{repairDetails.adjustedTotal} kg</dd>
+            </div>
+          </dl>
+        </section>
+      )}
+
       <button className="btn-main" onClick={onBack}>
         Back
       </button>
     </div>
   );
 }
+
+

@@ -2,7 +2,6 @@
   "name": "epoxy-visualizer",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:4000",
   "dependencies": {
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
@@ -17,6 +16,7 @@
     "express": "^5.1.0",
     "firebase": "^12.4.0",
     "framer-motion": "^12.23.22",
+    "http-proxy-middleware": "^3.0.5",
     "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.4",
     "react": "^19.2.0",
